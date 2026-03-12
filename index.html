@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文生流程图 · 主题风格画廊</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", -apple-system, sans-serif;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf5 50%, #f5f0f8 100%);
+  min-height: 100vh;
+  padding: 48px 24px;
+  color: #2d3748;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+
+.header { text-align: center; margin-bottom: 48px; }
+.header-tag {
+  font-size: 12px; font-weight: 600; letter-spacing: 2px;
+  color: #7c8db5; text-transform: uppercase; margin-bottom: 10px;
+}
+.header h1 { font-size: 28px; font-weight: 700; color: #1a2740; margin-bottom: 8px; }
+.header p { font-size: 14px; color: #718096; }
+.header p strong { color: #2b6cb0; }
+
+.hint {
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 14px 24px;
+  text-align: center;
+  font-size: 14px; color: #4a5568;
+  margin-bottom: 36px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.hint strong { color: #2b6cb0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+@media(max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+/* ── Theme Card ── */
+.theme-card {
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+  position: relative;
+}
+.theme-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.14);
+}
+.badge {
+  position: absolute; top: 14px; left: 14px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 12px; font-weight: 700;
+  border-radius: 8px; padding: 4px 12px;
+  z-index: 2;
+}
+.card-preview {
+  padding: 28px 24px 20px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  position: relative;
+}
+.card-info {
+  padding: 16px 20px 18px;
+}
+.card-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.card-info p { font-size: 12px; color: #718096; line-height: 1.5; }
+
+/* Mini flow nodes */
+.mini-flow { display: flex; flex-direction: column; align-items: center; gap: 0; width: 100%; }
+.mini-row { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.mn {
+  border-radius: 8px; padding: 7px 14px;
+  font-size: 12px; font-weight: 600; text-align: center;
+  min-width: 80px; white-space: nowrap;
+}
+.mn-sm { min-width: 64px; font-size: 11px; padding: 5px 10px; }
+.ma { width: 20px; height: 2px; position: relative; flex-shrink: 0; }
+.ma::after {
+  content: ''; position: absolute; right: -1px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  top: 50%; transform: translateY(-50%);
+}
+.md { width: 2px; height: 24px; position: relative; margin: 0 auto; }
+.md::after {
+  content: ''; position: absolute; bottom: -1px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  left: 50%; transform: translateX(-50%);
+}
+
+/* ════════════════════════════════════
+   1. 极简白
+════════════════════════════════════ */
+.t1 .card-preview { background: #ffffff; }
+.t1 .mn-a { background: #f7fafc; border: 2px solid #cbd5e0; color: #2d3748; }
+.t1 .mn-b { background: #edf2f7; border: 2px solid #a0aec0; color: #2d3748; }
+.t1 .mn-c { background: #f0fff4; border: 2px solid #9ae6b4; color: #276749; }
+.t1 .mn-d { background: #fff5f5; border: 2px solid #fc8181; color: #c53030; }
+.t1 .ma, .t1 .md { background: #a0aec0; }
+.t1 .ma::after { border-left-color: #a0aec0; }
+.t1 .md::after { border-top-color: #a0aec0; }
+.t1 .card-info { background: #fafafa; border-top: 1px solid #edf2f7; }
+.t1 .card-info h3 { color: #2d3748; }
+
+/* ════════════════════════════════════
+   2. 夜间黑
+════════════════════════════════════ */
+.t2 .card-preview { background: linear-gradient(135deg, #0f1923, #1a2535); }
+.t2 .mn-a { background: rgba(99,179,237,0.15); border: 2px solid #63b3ed; color: #bee3f8; }
+.t2 .mn-b { background: rgba(154,230,180,0.12); border: 2px solid #9ae6b4; color: #c6f6d5; }
+.t2 .mn-c { background: rgba(154,230,180,0.15); border: 2px solid #68d391; color: #9ae6b4; }
+.t2 .mn-d { background: rgba(252,129,129,0.15); border: 2px solid #fc8181; color: #fed7d7; }
+.t2 .ma, .t2 .md { background: #4a5568; }
+.t2 .ma::after { border-left-color: #4a5568; }
+.t2 .md::after { border-top-color: #4a5568; }
+.t2 .card-info { background: #1a2535; border-top: 1px solid #2d3748; }
+.t2 .card-info h3 { color: #e2e8f0; }
+.t2 .card-info p { color: #718096; }
+
+/* ════════════════════════════════════
+   3. 商务蓝
+════════════════════════════════════ */
+.t3 .card-preview { background: linear-gradient(135deg, #1a365d, #2c5282); }
+.t3 .mn-a { background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4); color: #fff; }
+.t3 .mn-b { background: rgba(144,205,244,0.2); border: 2px solid #90cdf4; color: #bee3f8; }
+.t3 .mn-c { background: rgba(154,230,180,0.2); border: 2px solid #9ae6b4; color: #c6f6d5; }
+.t3 .mn-d { background: rgba(252,129,129,0.2); border: 2px solid #fc8181; color: #fed7d7; }
+.t3 .ma, .t3 .md { background: rgba(255,255,255,0.3); }
+.t3 .ma::after { border-left-color: rgba(255,255,255,0.3); }
+.t3 .md::after { border-top-color: rgba(255,255,255,0.3); }
+.t3 .card-info { background: #2c5282; border-top: 1px solid #2b4c7e; }
+.t3 .card-info h3 { color: #ebf8ff; }
+.t3 .card-info p { color: #90cdf4; }
+
+/* ════════════════════════════════════
+   4. 自然绿
+════════════════════════════════════ */
+.t4 .card-preview { background: linear-gradient(135deg, #f0fff4, #e6ffed, #f0fdf4); }
+.t4 .mn-a { background: #c6f6d5; border: 2px solid #68d391; color: #22543d; }
+.t4 .mn-b { background: #9ae6b4; border: 2px solid #48bb78; color: #1c4532; }
+.t4 .mn-c { background: #f0fff4; border: 2px solid #9ae6b4; color: #276749; }
+.t4 .mn-d { background: #fff5f5; border: 2px solid #fc8181; color: #c53030; }
+.t4 .ma, .t4 .md { background: #68d391; }
+.t4 .ma::after { border-left-color: #68d391; }
+.t4 .md::after { border-top-color: #68d391; }
+.t4 .card-info { background: #f0fff4; border-top: 1px solid #c6f6d5; }
+.t4 .card-info h3 { color: #22543d; }
+
+/* ════════════════════════════════════
+   5. 科技紫
+════════════════════════════════════ */
+.t5 .card-preview { background: linear-gradient(135deg, #1a0533, #2d1b69, #1a0533); }
+.t5 .mn-a { background: rgba(183,148,246,0.2); border: 2px solid #b794f4; color: #e9d8fd; }
+.t5 .mn-b { background: rgba(118,169,250,0.2); border: 2px solid #76a9fa; color: #c3ddfd; }
+.t5 .mn-c { background: rgba(110,231,183,0.2); border: 2px solid #6ee7b7; color: #a7f3d0; }
+.t5 .mn-d { background: rgba(252,129,129,0.2); border: 2px solid #fc8181; color: #fed7d7; }
+.t5 .ma, .t5 .md { background: #6b46c1; }
+.t5 .ma::after { border-left-color: #6b46c1; }
+.t5 .md::after { border-top-color: #6b46c1; }
+.t5 .card-info { background: #2d1b69; border-top: 1px solid #553c9a; }
+.t5 .card-info h3 { color: #e9d8fd; }
+.t5 .card-info p { color: #b794f4; }
+
+/* ════════════════════════════════════
+   6. 活力橙
+════════════════════════════════════ */
+.t6 .card-preview { background: linear-gradient(135deg, #fffbeb, #fef3c7, #fff7ed); }
+.t6 .mn-a { background: #feebc8; border: 2px solid #f6ad55; color: #7b341e; }
+.t6 .mn-b { background: #fed7aa; border: 2px solid #ed8936; color: #652b19; }
+.t6 .mn-c { background: #f0fff4; border: 2px solid #68d391; color: #276749; }
+.t6 .mn-d { background: #fff5f5; border: 2px solid #fc8181; color: #c53030; }
+.t6 .ma, .t6 .md { background: #ed8936; }
+.t6 .ma::after { border-left-color: #ed8936; }
+.t6 .md::after { border-top-color: #ed8936; }
+.t6 .card-info { background: #fffbeb; border-top: 1px solid #feebc8; }
+.t6 .card-info h3 { color: #7b341e; }
+
+/* ════════════════════════════════════
+   7. 樱花粉
+════════════════════════════════════ */
+.t7 .card-preview { background: linear-gradient(135deg, #fff5f7, #ffe4e6, #fdf2f8); }
+.t7 .mn-a { background: #fed7e2; border: 2px solid #f687b3; color: #702459; }
+.t7 .mn-b { background: #fbb6ce; border: 2px solid #ed64a6; color: #521b41; }
+.t7 .mn-c { background: #f0fff4; border: 2px solid #68d391; color: #276749; }
+.t7 .mn-d { background: #fff5f5; border: 2px solid #fc8181; color: #c53030; }
+.t7 .ma, .t7 .md { background: #ed64a6; }
+.t7 .ma::after { border-left-color: #ed64a6; }
+.t7 .md::after { border-top-color: #ed64a6; }
+.t7 .card-info { background: #fff5f7; border-top: 1px solid #fed7e2; }
+.t7 .card-info h3 { color: #702459; }
+
+/* ════════════════════════════════════
+   8. 深海蓝
+════════════════════════════════════ */
+.t8 .card-preview { background: linear-gradient(135deg, #0a192f, #172a46, #0d2137); }
+.t8 .mn-a { background: rgba(100,210,255,0.15); border: 2px solid #64d2ff; color: #caf0ff; }
+.t8 .mn-b { background: rgba(52,211,153,0.15); border: 2px solid #34d399; color: #a7f3d0; }
+.t8 .mn-c { background: rgba(52,211,153,0.15); border: 2px solid #34d399; color: #a7f3d0; }
+.t8 .mn-d { background: rgba(252,129,129,0.15); border: 2px solid #fc8181; color: #fed7d7; }
+.t8 .ma, .t8 .md { background: #1e3a5f; }
+.t8 .ma::after { border-left-color: #1e3a5f; }
+.t8 .md::after { border-top-color: #1e3a5f; }
+.t8 .card-info { background: #0d2137; border-top: 1px solid #1e3a5f; }
+.t8 .card-info h3 { color: #caf0ff; }
+.t8 .card-info p { color: #64d2ff; }
+
+.footer { text-align: center; margin-top: 40px; font-size: 12px; color: #a0aec0; }
+
+/* ════════════════════════════════════
+   9. 磨砂玻璃
+════════════════════════════════════ */
+.t9 .card-preview {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8edf2 50%, #f5f0eb 100%);
+}
+.t9 .mn-a {
+  background: rgba(255,255,255,0.75);
+  border: 2px solid rgba(144,205,244,0.6);
+  color: #2b6cb0;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.t9 .mn-b {
+  background: rgba(255,255,255,0.65);
+  border: 2px solid rgba(107,70,193,0.4);
+  color: #553c9a;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.t9 .mn-c {
+  background: rgba(240,255,244,0.8);
+  border: 2px solid rgba(104,211,145,0.7);
+  color: #276749;
+  backdrop-filter: blur(4px);
+}
+.t9 .mn-d {
+  background: rgba(255,245,245,0.8);
+  border: 2px solid rgba(252,129,129,0.7);
+  color: #c53030;
+  backdrop-filter: blur(4px);
+}
+.t9 .ma, .t9 .md { background: #a0aec0; }
+.t9 .ma::after { border-left-color: #a0aec0; }
+.t9 .md::after { border-top-color: #a0aec0; }
+.t9 .card-info {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(144,205,244,0.3);
+}
+.t9 .card-info h3 { color: #1a365d; }
+.t9 .card-info p { color: #4a5568; }
+
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-tag">Text-to-Flowchart · Theme Gallery</div>
+    <h1>🎨 主题风格画廊</h1>
+    <p>共 <strong>8 种主题</strong>，选择你喜欢的编号告诉小D</p>
+  </div>
+
+  <div class="hint">
+    📌 告诉小D：<strong>「我选主题 3」</strong> 或 <strong>「用商务蓝」</strong>，即可按此风格生成你的流程图
+  </div>
+
+  <div class="grid">
+
+    <!-- 1. 极简白 -->
+    <div class="theme-card t1">
+      <div class="badge">① 极简白</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t1">开始 / 触发</div></div>
+          <div class="md t1"></div>
+          <div class="mini-row"><div class="mn mn-b t1">处理步骤</div></div>
+          <div class="md t1"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t1">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t1">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t1">
+        <h3>极简白</h3>
+        <p>纯白底色，灰色节点，线条克制。适合文档、汇报、正式场合。</p>
+      </div>
+    </div>
+
+    <!-- 2. 夜间黑 -->
+    <div class="theme-card t2">
+      <div class="badge">② 夜间黑</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t2">开始 / 触发</div></div>
+          <div class="md t2"></div>
+          <div class="mini-row"><div class="mn mn-b t2">处理步骤</div></div>
+          <div class="md t2"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t2">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t2">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t2">
+        <h3>夜间黑</h3>
+        <p>深色背景，发光边框，赛博感强。适合技术展示、开发文档。</p>
+      </div>
+    </div>
+
+    <!-- 3. 商务蓝 -->
+    <div class="theme-card t3">
+      <div class="badge">③ 商务蓝</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t3">开始 / 触发</div></div>
+          <div class="md t3"></div>
+          <div class="mini-row"><div class="mn mn-b t3">处理步骤</div></div>
+          <div class="md t3"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t3">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t3">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t3">
+        <h3>商务蓝</h3>
+        <p>藏青蓝底，专业沉稳。适合商业提案、汇报 PPT、对外展示。</p>
+      </div>
+    </div>
+
+    <!-- 4. 自然绿 -->
+    <div class="theme-card t4">
+      <div class="badge">④ 自然绿</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t4">开始 / 触发</div></div>
+          <div class="md t4"></div>
+          <div class="mini-row"><div class="mn mn-b t4">处理步骤</div></div>
+          <div class="md t4"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t4">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t4">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t4">
+        <h3>自然绿</h3>
+        <p>清新绿色渐变，有机自然感。适合流程培训、环保主题、生命周期。</p>
+      </div>
+    </div>
+
+    <!-- 5. 科技紫 -->
+    <div class="theme-card t5">
+      <div class="badge">⑤ 科技紫</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t5">开始 / 触发</div></div>
+          <div class="md t5"></div>
+          <div class="mini-row"><div class="mn mn-b t5">处理步骤</div></div>
+          <div class="md t5"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t5">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t5">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t5">
+        <h3>科技紫</h3>
+        <p>深紫背景，霓虹配色，未来感十足。适合 AI 产品、科技主题展示。</p>
+      </div>
+    </div>
+
+    <!-- 6. 活力橙 -->
+    <div class="theme-card t6">
+      <div class="badge">⑥ 活力橙</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t6">开始 / 触发</div></div>
+          <div class="md t6"></div>
+          <div class="mini-row"><div class="mn mn-b t6">处理步骤</div></div>
+          <div class="md t6"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t6">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t6">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t6">
+        <h3>活力橙</h3>
+        <p>暖橙黄色调，活泼亲切。适合教育培训、用户引导、流程说明。</p>
+      </div>
+    </div>
+
+    <!-- 7. 樱花粉 -->
+    <div class="theme-card t7">
+      <div class="badge">⑦ 樱花粉</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t7">开始 / 触发</div></div>
+          <div class="md t7"></div>
+          <div class="mini-row"><div class="mn mn-b t7">处理步骤</div></div>
+          <div class="md t7"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t7">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t7">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t7">
+        <h3>樱花粉</h3>
+        <p>粉色柔和渐变，创意感强。适合用户旅程、创意流程、产品设计。</p>
+      </div>
+    </div>
+
+    <!-- 8. 深海蓝 -->
+    <div class="theme-card t8">
+      <div class="badge">⑧ 深海蓝</div>
+      <div class="card-preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t8">开始 / 触发</div></div>
+          <div class="md t8"></div>
+          <div class="mini-row"><div class="mn mn-b t8">处理步骤</div></div>
+          <div class="md t8"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t8">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t8">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t8">
+        <h3>深海蓝</h3>
+        <p>深邃海洋蓝，高端沉稳。适合金融、战略规划、企业级场景。</p>
+      </div>
+    </div>
+
+  </div>
+
+    <!-- 9. 磨砂玻璃 -->
+    <div class="theme-card t9">
+      <div class="badge">⑨ 磨砂玻璃</div>
+      <div class="preview">
+        <div class="mini-flow">
+          <div class="mini-row"><div class="mn mn-a t9">开始 / 触发</div></div>
+          <div class="md t9"></div>
+          <div class="mini-row"><div class="mn mn-b t9">处理步骤</div></div>
+          <div class="md t9"></div>
+          <div class="mini-row">
+            <div class="mn mn-sm mn-c t9">✓ 通过</div>
+            <div style="width:24px;"></div>
+            <div class="mn mn-sm mn-d t9">✗ 拒绝</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-info t9">
+        <h3>磨砂玻璃</h3>
+        <p>蓝白渐变底，玻璃质感卡片，精致通透。适合高端展示、企业汇报、产品文档。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">文生流程图 · 主题画廊 · Generated by 小D · DataClaw</div>
+</div>
+</body>
+</html>
